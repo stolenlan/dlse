@@ -1,5 +1,9 @@
 *.o
 *.exe
+*.res
 dlse
-backup-saves
+dev/backup-saves
 save
+
+# Link to install path
+dlords

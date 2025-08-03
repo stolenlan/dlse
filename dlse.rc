@@ -1,0 +1,60 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2025 Tyler Anderson <stolenlan@gmail.com>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+*/
+#include <windows.h>
+#include "dlse_gui.h"
+
+IDMAPP_MANA 24 "dev/res/app.manifest"
+IDMAIN_ICON ICON "dev/res/dlse.ico"
+IDWAVE_DROP WAVE "dev/res/drop.wav"
+IDWAVE_BLES WAVE "dev/res/Bless_1a.wav"
+
+
+VS_VERSION_INFO VERSIONINFO
+	FILEVERSION 1,0,0,0
+	PRODUCTVERSION 1,0,0,0
+	FILEFLAGSMASK 0x2fL
+	FILEFLAGS 0x0L
+	FILEOS 0x40004L
+	FILETYPE 0x1L
+	FILESUBTYPE 0x0L
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904b0" // LANG_ENGLISH/SUBLANG_DEFAULT
+		BEGIN
+			VALUE "CompanyName", "Outlaw Engineering"
+			VALUE "FileDescription", "Dungon Lords Save Editor"
+			VALUE "FileVersion", "1.0.0.0"
+			VALUE "InternalName", "dlse"
+			VALUE "OriginalFilename", "dlse.exe"
+			VALUE "LegalCopyright", "(c) 2025 Tyler Anderson. All rights reserved."
+			VALUE "ProductName", "Dungeon Lords Save Editor"
+			VALUE "ProductVersion", "1.0.0.0"
+		END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x0409, 1200
+	END
+END

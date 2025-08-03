@@ -14,7 +14,7 @@ int set_property(const char *savefile_path, const char *value_string) {
 char savefile_path[MAX_PATH] = "";
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    static HWND hFileBtn, hValueEdit, hPatchBtn;
+    static HWND hFileBtn, hValueEdit, hPatchBtn, hLabel;
 
     switch (msg) {
         case WM_CREATE:
@@ -29,8 +29,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             hPatchBtn = CreateWindow("BUTTON", "Apply Patch", 
                 WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 
                 10, 90, 150, 30, hwnd, (HMENU)3, NULL, NULL);
+
+            hLabel = CreateWindow("STATIC", "HOLY FUCKITY",
+                WS_VISIBLE | WS_CHILD, 10, 180, 100,25, hwnd, NULL,NULL, NULL);
             break;
 
+        case WM_GETMINMAXINFO:
+            MINMAXINFO *mmi = (MINMAXINFO *)lParam;
+            mmi->ptMinTrackSize.x = 400;
+            mmi->ptMinTrackSize.y = 400;
+            mmi->ptMaxSize.x = 400;
+            mmi->ptMaxSize.y = 400;
+            return 0;
+            break;
         case WM_COMMAND:
             switch (LOWORD(wParam)) {
                 case 1: { // File dialog
@@ -69,6 +80,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             PostQuitMessage(0);
             break;
 
+        case WM_VSCROLL:
+            printf("Yeah we scrolled man\n");
+            break;
         default:
             return DefWindowProc(hwnd, msg, wParam, lParam);
     }
@@ -78,6 +92,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow) {
+
     const char g_szClassName[] = "SaveEditWindowClass";
 
     WNDCLASSEX wc = {
@@ -94,8 +109,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     HWND hwnd = CreateWindowEx(
         0, g_szClassName, "Savegame Editor",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, 400, 200,
+        WS_OVERLAPPEDWINDOW | WS_VSCROLL,
+        CW_USEDEFAULT, CW_USEDEFAULT, 400, 600,
         NULL, NULL, hInstance, NULL);
 
     if (hwnd == NULL) return 1;
