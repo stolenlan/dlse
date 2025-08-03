@@ -8,3 +8,7 @@ Copyright (c) 2025 Tyler Anderson <stolenlan@gmail.com>
   user can simply double click on, and enter interactive mode.
 + It's not complicated, so I made sure to comment as little as possible to keep
   things fun.
+
+### Version 1.0.1
++ Realized that my bitcoin donation address was missing a character at the end,
+  phew, that was close, I almost lost out on the potential gold mine.

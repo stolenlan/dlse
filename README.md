@@ -84,7 +84,8 @@ See: dlse --help for more information.
 
  Dungeon Lords Save Editor
  (c) 2025 Tyler Anderson - <stolenlan@gmail.com>
- Bitcoin: bc1qmgv9thga0ff0le4hg6kaf6y272g5j7gm3jw6h (may help with the GUI :)
+ Bitcoin: bc1qmgv9thga0ff0le4hg6kaf6y272g5j7gm3jw6hq
+          May help with the GUI :)
 
  Interactive mode commands:
  --------------------------
