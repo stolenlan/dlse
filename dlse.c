@@ -31,10 +31,10 @@
 #include <getopt.h>
 #include <errno.h>
 #include <dirent.h>
-
 #include "dlse.h"
 
-bool verbose_mode = false;
+bool verbose_mode = false;		// Currently unused
+int n_offsets_v15 = 0;			// eek out a few extra cycles by storing this.
 
 struct st_offset offset_v15[] = {
 	{33463, DT_CH20, "Character Name", 			"name", 	-1, "None"},
@@ -118,7 +118,6 @@ struct st_offset offset_v15[] = {
     {   -1,      -1,                 NULL,        NULL,     -1,      NULL }
 };
 
-
 char *categories[] = {
 	"None", 
 	"Stat", 
@@ -198,7 +197,7 @@ char *interactive_help = "\n"
 
 "   Here is the process to \"continue\" with your end-game character:\n"
 "    1) Play through to some point in the story, ideally to the last sequence\n"
-"       Just after killing the soul-eater, but BEFORE releaseing Gauldryn\n"
+"       Just after killing the soul-eater, but BEFORE releaseing Galdryn\n"
 "       and save the game to the last save slot (10) (recommended).\n"
 "    2) After saving, finish the game (release low-budget Gandalf), \n"
 "       and enjoy the end sequence. It's at this point you are lied to,\n"
@@ -209,50 +208,41 @@ char *interactive_help = "\n"
 "    5) Quit the game, and run this utility. Load the NEW game in (slot 1)\n"
 "       To be clear, you are loading the new save, once loaded run: cont 10\n"
 "       This will copy the stats/skills/items from the last slot (10) into\n"
-"       the new game in slot 1. You may have to unequip/reequip your weapons."
-"\n\n"
-" NOTES: It would behoove you to make a backup of your game save before any\n"
+"       the new game in slot 1. You may have to unequip/reequip your weapons.\n"
+"\n"
+" It would behoove you to make a backup of your game save before any\n"
 " shenanigans with this utiltiy. Just saying, not my fault if you get things\n"
 " backwards and overwrite your god-tier character with a level one putz.\n\n";
 
 /**
  * Print provided data as a string of hexadecimal characters
- * 
  * FOR TESTING
  */
 static void printx(unsigned char *data, unsigned int len) {
-
 	int n_items = 0;
-
 	for(int i = 0; i < len; i += 16) {
 		for(int ii = 0; ii < 16 && i+ii < len; ii++) {
 			printf("%02x ", data[i+ii]);
 		}
-
 		uint16_t v = *(uint16_t *)&data[i];
-
 		printf("(%u)\n", v);
-
 		if(v > 0) n_items++;
 	}
-
 	printf("Total Items: %i\n", n_items);
 }
 
-int n_offsets_v15 = 0;
+
 int offset_count() {
+	// n_offsets_v15 is a global
 	if(n_offsets_v15 == 0) {
 		for(int i = 0; i < 1000; i++) {
 			struct st_offset inst = offset_v15[i];
-
 			if(inst.key == NULL && inst.offset == -1) {
 				break;
 			}
-
 			n_offsets_v15++;
 		}
 	}
-
 	return n_offsets_v15;
 }
 
@@ -260,7 +250,6 @@ void print_usage() {
 	printf("Usage dlse [OPTIONS] <save file path>\n");
 	printf("See: dlse --help for more information.\n");
 }
-
 
 char * search_default_save_path(int target_idx) {
 	#ifdef _WIN32
@@ -295,9 +284,7 @@ char * search_default_save_path(int target_idx) {
 			if(save_version != 150) {
 				continue;
 			}
-
 			fi++;
-
 			if(target_idx < 1) {
 				char *save_name = get_save_name(buff);
 				char *save_date = get_save_date(buff);
@@ -319,7 +306,6 @@ char * search_default_save_path(int target_idx) {
 			printf(" specity the path of the save to load.\n");
 		}
 	}
-
 	return NULL;
 }
 
@@ -540,7 +526,6 @@ void interactive_mode() {
 				printf("** Transfer ABORTED **\n");
 				continue;
 			}
-
 			continue;
 		}
 
@@ -553,13 +538,11 @@ void interactive_mode() {
 				printf("You must load a save file first!\n");
 				continue;
 			}
-			
 		}
 
 		if(strcmp(cmd, "set-") == 0) {
 			if(valid_savepath != NULL) {
 				// Grab the remaining key (everything up to the space char)
-				
 				char key_buff[17];
 				memset(key_buff, '\0', 17);
 				for(int i = 4; i < 16; i++) {
@@ -581,11 +564,9 @@ void interactive_mode() {
 						}
 						val_start = i;
 					}
-
 					if(buff[i] == ' ' || buff[i] == '\n' || buff[i] == '\r') {
 						break;
 					}
-
 					val_buff[i-val_start] = buff[i];
 				}
 
@@ -606,19 +587,14 @@ void interactive_mode() {
 
 
 		buff[strlen(buff)-1] = '\0';
-
 		printf("Unknown command: %s\n", buff);
 		printf("Valid commands are: help, load <save/idx>, list, set-<key>, "
 			"cont <save/idx>.\n");
-
-		
 	}
 }
 
 void print_help() {
-
 	printf("%s\nSET CHARACTER PROPERTIES\n", help_text);
-
 	// Iterate over the defined structure, and 
 	for(int i = 0; i < n_offsets_v15; i++) {
 		struct st_offset inst = offset_v15[i];
@@ -629,7 +605,6 @@ void print_help() {
 		printf(
 		"      %-28s%s\n", set_opt_param_help, inst.label);
 	}
-
 	printf("\n");
 }
 
@@ -644,7 +619,6 @@ int get_offset_index(const char *key) {
 			return i;
 		}
 	}
-
 	return -1;
 }
 
@@ -655,15 +629,10 @@ int get_save_major_vers(const char *filename) {
 		printf("%s: %s\n", filename, errstr);
 		return -1;
 	}
-
 	int mvers;
-
 	int br = fread(&mvers, sizeof(int), 1, sfile_stream);
-
 	fclose(sfile_stream);
-
 	if(br > 0) return mvers;
-	
 	return -1;
 }
 
@@ -731,10 +700,8 @@ char * get_property(const char *filename, const char *key) {
 	}
 
 	struct st_offset inst = offset_v15[idx];
-
 	char *buff = malloc(sizeof(char)*64);
 	memset(buff, '\0', 64);
-
 	bool success = false;
 
 	if(inst.type == DT_CH20) {
@@ -742,7 +709,6 @@ char * get_property(const char *filename, const char *key) {
 		fread(buff, sizeof(char), 20, sfile_stream);
 		success = true;
 	}
-
 
 	if(inst.type == DT_SINT) {
 		uint8_t val;
@@ -752,7 +718,6 @@ char * get_property(const char *filename, const char *key) {
 		success = true;
 	}
 
-
 	if(inst.type == DT_NINT) {
 		int val;
 		fseek(sfile_stream, sfile_size-inst.offset, SEEK_SET);
@@ -760,7 +725,6 @@ char * get_property(const char *filename, const char *key) {
 		sprintf(buff, "%i", val);
 		success = true;
 	}
-
 
 	if(inst.type == DT_UINT) {
 		uint32_t val;
@@ -778,13 +742,11 @@ char * get_property(const char *filename, const char *key) {
 		success = true;
 	}
 
-
 	fclose(sfile_stream);
 
-	if(success) {
-		return buff;
-	}
+	if(success) return buff;
 
+	// Otherwise 
 	free(buff);
 	return NULL;
 }
@@ -905,11 +867,8 @@ int list_character_data(char *filename) {
 	printf("--------------------------------------------------------------\n");
 	for(int i = 0; i < n_offsets_v15; i++) {
 		struct st_offset inst = offset_v15[i];
-
 		if(inst.key == NULL) continue;
-
 		char *str_val = get_property(filename, inst.key);
-
 		printf("%-*s %-*s %s\n", 12, inst.key, 
 			32, inst.label, str_val);
 		free(str_val);
@@ -940,8 +899,6 @@ int list_character_data(char *filename) {
 	// 	fseek(sfile_stream, sfile_size-OFFSET_ITEMS_START+(i*4), SEEK_SET);
 	// }
 	fclose(sfile_stream);
-
-
 
 	printf("---\n");
 	printf("Save Name: %s\n", save_name);
@@ -1002,7 +959,6 @@ int set_all_skills(const char *filename, const char *str_val) {
 
 	fclose(sfile_stream);
 	return 0;
-
 }
 
 
@@ -1029,7 +985,6 @@ int replace_items(const char *filename, const unsigned char *src_file) {
 	// For now just print the hex data
 	fread(source_items, items_size, 1, replace_source_stream);
 	fclose(replace_source_stream);
-
 
 	// Save the items to the dest file
 	FILE *sfile_stream = fopen(filename, "r+");
@@ -1100,5 +1055,3 @@ int transfer_to(const char *filename, const char *src_file) {
 
 	return replace_items(filename, src_file);
 }
-
-

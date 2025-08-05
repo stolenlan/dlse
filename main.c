@@ -34,14 +34,14 @@ int main(int argc, char *argv[]) {
 	char *sfile_path = NULL;
 	char *replace_items_source_path = NULL;
 	char *previous_char_source_path = NULL;
-	
 	bool enable_list_character_data = false;
 	bool enable_set_all_prot = false;
 	bool enable_set_all_skills = false;
 	char *set_key = NULL;
 	char *str_val = NULL;
-
 	int n_offsets = offset_count();
+	int c, i, loptind = 0;
+	int n_settable_props = 0;
 
 	if(argc < 2) {
 		print_usage();
@@ -49,9 +49,6 @@ int main(int argc, char *argv[]) {
 		return -2;
 	}
 
-	int c, i, loptind = 0;
-
-	int n_settable_props = 0;
 	for(int i = 0; i < n_offsets; i++) {
 		struct st_offset inst = offset_v15[i];
 		if(inst.key == NULL) continue;
@@ -59,7 +56,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	const char *shortops = "hp:s:r:t:l";
-	// The available options.
 
 	struct option static_longops[] = {
 		{"help",                       no_argument,        0,            'h' },
@@ -103,15 +99,12 @@ int main(int argc, char *argv[]) {
 	longops[opt_idx+N_STATIC_OPS] = last_opt;
 
 	for(i = 1; i < argc; i++) {
-
 		c = getopt_long(argc, argv, shortops, longops, &loptind);
-
 		switch(c) {
 			case 0:
 				if(strcmp(longops[loptind].name, "verbose") == 0) {
 					verbose_mode = true;
 				}
-
 				// grab the first-four characters
 				char opt_prefix[5];
 				memset(opt_prefix, '\0', 5);
@@ -133,7 +126,6 @@ int main(int argc, char *argv[]) {
 					set_key = strdup(set_opt_key);
 					str_val = optarg;
 				}
-
 				break;
 			case 'h': // Help - print help text and exit immediatly
 				print_usage();
@@ -170,8 +162,8 @@ int main(int argc, char *argv[]) {
 		return 2;
 	}
 
-	// If there are remaining items not processed by getopt they are hopefully
-	// commands to be executed
+	// If there are remaining items not processed by getopt it better be the
+	// target save file
 	for (int i = optind; i < argc; i++) {
 		FILE *fname_test_stream = fopen(argv[i], "r");
 		if(!fname_test_stream) {
@@ -181,14 +173,11 @@ int main(int argc, char *argv[]) {
 			return 1;
 		}
 		fclose(fname_test_stream);
-
-
 		int save_version = get_save_major_vers(argv[i]);
 		if (save_version != 150) {
 			printf("ERROR: Unsupported save/game version.\n");
 			return 2;
 		}
-
 		sfile_path = argv[i];
 	}
 
@@ -196,7 +185,6 @@ int main(int argc, char *argv[]) {
 		printf("No save filename provided\n");
 		return 1;
 	}
-
 
 	if(replace_items_source_path != NULL) {
 		int save_version = get_save_major_vers(replace_items_source_path);
@@ -222,25 +210,19 @@ int main(int argc, char *argv[]) {
 		return list_character_data(sfile_path);
 	}
 
-	// Set 
 	if(set_key != NULL) {
 		if(str_val == NULL) {
 			printf("You must specify --value with --set\n");
 			print_usage();
 			return 1;
 		}
-
 		int retval = set_property(sfile_path, set_key, str_val);
-		
 		if(retval != 0) {
 			printf("WARNING: Set property --set-%s failed.\n", set_key);
 		}
-
 		free(set_key);
-
 		return retval;
 	}
-
 
 	if(enable_set_all_prot) {
 		return set_all_protections(sfile_path, str_val);

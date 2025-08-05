@@ -1,4 +1,4 @@
-Have you ever started something, turned around and questioned WTF you're doing?
+Have you ever started something, turned around and questioned you're doing?
 Enter...
 
 ## Dungeon Lords Save Editor (dlse) 
@@ -17,6 +17,12 @@ hermits haven, and spite. I suppose it's time to start versioning this oddity.
 Currently this utility only supports the Collectors Edition, however it would
 be trivial to add support for other versions, Just need the hex offsets, and
 test.  I only have the Collectors Edition here to test with.
+
+If you have the Steam Version, and are interested in a working save editor, 
+It would likely be enough if you send me a at least one save file, along with 
+the corresponding character stats/skills, so that I can verify the offsets.
+It would also help to have more than one save, for the same character at
+different points in the story. 
 
 ## Building
 
@@ -43,35 +49,37 @@ wondering whats going on, well... I have - for over 27 years - used Linux as
 my daily driver, thus after finding an old copy of Dungeon Lords Collectors 
 Edition in one of my 55-gallon drums, I decided to install it using Wine.
 
-Wine runs the game perfectly, then, after realizing I didn't really have time
-to actually finish the game, I figured, I'd just edit the save file by "hand" 
-using a hex editor. But editing values in hex is annoying, so I wrote a short 
-~30-line C program to edit it in real-human readable decimal values...  
+Aafter realizing I didn't really have time to actually finish the the game
+without cheating, I figured, I'd just edit the save file by "hand" using a hex 
+editor. But editing values in hex is annoying, so I wrote a short  ~30-line 
+C program to edit it in real-human readable decimal values.
 
-It quickly became very capable, and I added command line options, and the 
-ability to ACTUALLY continue the game after completing the story. By the way, 
-that was a slap in the face, the lovingly buggy game litterally tells you after
-completing the story that you can  continue with your character, then 
-completely ghosts you. I simply couldn't let that stand without addressing it.  
+It quickly became imbarasingly capable, and I added command line options, and 
+the ability to actually continue the game after completing the story - By the way, 
+that was a slap in the face, a screen at the end litterally tells you after
+completing the story that you can continue with your character; lies!. 
 
-Anyhoo, It's now too useful (in the context of this obscure game) not to share
-it with any other nuts still playing it. However they're likely using Windows 
-right?  So, this project is compiled on a Linux system using mingw32/64 to
-target Windows.  There IS an in-progress Win32API GUI, but honestly, it's more 
-of a plaything as I learn the Win32API. And yes... Win32 C API, you saw that
-correctly.  Why, because this is a stupid-simple tool, that needs to work on 
-systems from Windows98 to Windows 11. Using the Win32 API means that there are 
-zero dependencies, no fluf, no bloat, just lean and mean C code. Thanks to common-controls it's even styled to match shiny new versions of Winblows. It
+Anyway, It's now too useful (in the context of this obscure game) not to share
+it with any other weirdos still playing it. However they're less-weird and 
+likely using Windows right?  So, this project is compiled on a Linux system 
+using mingw32/64 to target Windows.  There IS an in-progress Win32API GUI, but
+honestly, it's more of a plaything as I learn the Win32API. Why the Win32 C API
+you say? Because this is a stupid-simple tool, that needs to work on systems 
+from Windows98 to Windows 11. Using the Win32 API means that there are zero 
+dependencies, no fluf, no bloat, just lean and mean C code. Thanks to 
+common-controls it's even styled to match shiny new versions of Winblows. It
 compiles to < 400k (with all resources including a fancy icon), and loads/runs 
-in the literal blink of an eye.
+in the literal blink of an eye.  Beat that with your favorite monolithic 
+framework stack!
 
 ### Takeaways
 - Built with indifference on Linux, and cross-compiled for Windows using 
   MinGW32/64.
-- Written in pure C, no .NET, no 1GB of NodeJS dependencies (simply for your 
-  favorite isEven() function).
-- Allows you to munchkin your character
-- Allows you to actually continue your game after story completion.
+- Written in pure C, no .NET, no frameworks, no 1GB+ of NodeJS dependencies
+  pulled in because you really like using your favorite thing.isEven() function.
+- Allows you to munchkin your character (cheat like a badass).
+- Allows you to **actually** continue your game after story completion. I'm not
+  bitter, because, I get even... Eventually.
 - Allows you to play a lovingly buggy old game, in a way that remains fun.
 
 
@@ -117,7 +125,7 @@ See: dlse --help for more information.
 
    Here is the process to "continue" with your end-game character:
     1) Play through to some point in the story, ideally to the last sequence
-       Just after killing the soul-eater, but BEFORE releaseing Gauldryn
+       Just after killing the soul-eater, but BEFORE releaseing Galdryn
        and save the game to the last save slot (10) (recommended).
     2) After saving, finish the game (release low-budget Gandalf), 
        and enjoy the end sequence. It's at this point you are lied to,
@@ -130,7 +138,8 @@ See: dlse --help for more information.
        This will copy the stats/skills/items from the last slot (10) into
        the new game in slot 1. You may have to unequip/reequip your weapons.
 
- NOTES: It would behoove you to make a backup of your game save before any
- shenanigans with this utiltiy. Just saying, not my fault if you get things
- backwards and overwrite your god-tier character with a level one putz.
+ It would behoove you to make a backup of your game save before any shenanigans
+ with this utiltiy. Just saying, not my fault if you get things backwards and 
+ overwrite your god-tier character with a level one putz.
+
 ```

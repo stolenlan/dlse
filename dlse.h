@@ -22,6 +22,22 @@
  * SOFTWARE.
 */
 
+
+/**
+ * 
+ * WORKING NOTES (STEAM VERSION)
+ * 
+ * Weapons start 2134 from end of last character name
+ * 20 slots, with 48 bytes between each slot, and 48 between each inventory
+ * category
+ * 
+ * armor starts 3094 after first letter of last occurence of character name
+ * jewelry starts 4054 bytes after first letter of ...
+ * potions and scrolls start 5014 bytes ...
+ * keys and quest items start 5974 bytes...
+ * junk bag 6934
+ */
+
 // TODO set these to v15 offset items...
 #define OFFSET_ITEMS_START 31355
 #define OFFSET_ITEMS_END 26255
@@ -54,28 +70,17 @@ extern bool verbose_mode;
 extern char *help_text;
 extern char *interactive_help;
 
-/**
- * 
- * WORKING NOTES
- * 
- * Weapons start 2134 from end of last character name
- * 20 slots, with 48 bytes between each slot, and 48 between each inventory
- * category
- * 
- * armor starts 3094 after first letter of last occurence of character name
- * jewelry starts 4054 bytes after first letter of ...
- * potions and scrolls start 5014 bytes ...
- * keys and quest items start 5974 bytes...
- * junk bag 6934
- */
 int offset_count();
 void print_usage();
 void interactive_mode();
 void print_help();
 int get_offset_index(const char *key);
 int get_save_major_vers(const char *filename);
+// User must free
 char * get_save_name(const char *filename);
+// User must free
 char * get_save_date(const char *filename);
+// User must free
 char * get_property(const char *filename, const char *key);
 int set_property(const char *filename, 
 	const char *set_key, const char *str_val);
